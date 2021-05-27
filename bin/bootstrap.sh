@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-HELM_VERSION=3.2.4
+HELM_VERSION=3.6.0
 
 # Faster than VirtualBox's DNS Server
 sed -i 's/127.0.0.53/1.1.1.1/' /etc/resolv.conf
@@ -13,7 +13,7 @@ rm -rf helm-v$HELM_VERSION-linux-amd64.tar.gz linux-amd64
 swapoff -a
 sed -i '/swap/d' /etc/fstab
 
-snap install microk8s --classic --channel=1.19/stable
+snap install microk8s --classic
 
 # Waits until K8s cluster is up
 sleep 15
@@ -22,7 +22,7 @@ microk8s.enable dns
 microk8s.enable metallb:192.168.50.100-192.168.50.200
 
 mkdir -p /home/vagrant/.kube
-microk8s config > /home/vagrant/.kube/config
+microk8s config >/home/vagrant/.kube/config
 usermod -a -G microk8s vagrant
 chown -f -R vagrant /home/vagrant/.kube
 
