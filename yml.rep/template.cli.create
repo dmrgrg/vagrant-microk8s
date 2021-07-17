@@ -1,0 +1,39 @@
+cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docusaurus-app
+  namespace: dive-apps
+spec:
+  selector:
+    matchLabels:
+      app: docusaurus
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: docusaurus
+    spec:
+      containers:
+        - name: docusaurus
+          image: awesometic/docusaurus
+          #volumeMounts:
+          #  - mountPath: /test-pd
+          #    name: test-volume
+          resources:
+            requests:
+              cpu: 250m
+              memory: 500Mi
+            limits:
+              cpu: 250m
+              memory: 500Mi
+          ports:
+            - containerPort: 80
+EOF
+
+kubectl logs docusaurus-deployment-58bbb7574b-npk4t -n dive-apps
+kubectl config set-context --current --namespace=dive-apps
+kubectl config set-context --current --namespace=default
+kubectl logs dive-keycloak-0 -n keycloak-system
+kubectl describe pod dive-keycloak-0 -n keycloak-system
+kubectl exec -i -t docusaurus-app-678b54b5b5-slr5f -- /bin/sh

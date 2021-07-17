@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: demo
+  namespace: dive-apps
+  annotations:
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /docusaurus
+            backend:
+              serviceName: docusaurus-service
+              servicePort: 80
